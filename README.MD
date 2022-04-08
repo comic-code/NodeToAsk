@@ -21,9 +21,6 @@
 - Node.js
 - Express
 - MySQL
+- Sequelize
 
 ---
-
-## Repositório
-
->

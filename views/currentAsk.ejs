@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <%- include('partials/header.ejs') %>
+  <body>
+    <%- include('partials/navbar.ejs') %>
+    <div class="container">
+      <h1><%= ask.title %></h1>
+      <p><%= ask.description %></p>
+      <hr />
+      <form method="post" action="/response"
+        class="row ms-3 me-3">
+        <textarea 
+          class="form-control" 
+          placeholder="Digite sua resposta" 
+          name="body"></textarea>
+        <input type="hidden" name="askId" value="<%= ask.id %>" />
+
+        <button type="submit" class="btn btn-primary mt-3">Responder</button>
+      </form>
+    </div>
+  </body>
+  <%- include('partials/scripts.ejs') %>
+</html>

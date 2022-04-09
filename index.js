@@ -4,10 +4,9 @@ const bodyParser = require('body-parser');
 
 const connection = require('./database');
 const Ask = require('./database/models/Ask');
+const Response = require('./database/models/Response');
 
-connection
-  .authenticate()
-  .then(() => {
+connection.authenticate().then(() => {
     console.log('DB 🚀');
   })
   .catch(error => {
@@ -20,12 +19,28 @@ app.use(bodyParser.urlencoded({ extended: false })); // Necessário para receber
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
-  res.render('index'); // Automaticamente pega "VIEWS"
+  Ask.findAll({ raw: true, order: [ // raw: true trás apenas os dados
+    ['id', 'DESC'] // ASC = Crescente || DESC = Decrescente
+  ]}).then(asks => {
+    res.render('index', {
+      asks
+    });
+  });
 });
 
 app.get('/ask', (req, res) => {
   res.render('ask');
 });
+
+app.get('/ask/:id', (req, res) => {
+  const { id } = req.params;
+  Ask.findOne({
+    raw: true,
+    where: {id}
+  }).then(ask => {
+    ask ? res.render('currentAsk', { ask }) : res.redirect('/');
+  });
+})
 
 app.post('/saveAsk', (req, res) => {
   const { title, description } = req.body;
@@ -33,9 +48,21 @@ app.post('/saveAsk', (req, res) => {
     title,
     description
   }).then(() => {
+    console.log('Ask salvo ✔️');
     res.redirect('/');
   });
 });
+
+app.post('/response', (req, res) => {
+  const { askId, body } = req.body;
+  Response.create({
+    askId,
+    body
+  }).then(() => {
+    console.log(`Resposta para Ask ${askId} ✔️`);
+    res.redirect(`/ask/${askId}`);
+  }).catch(e => console.log(e));
+})
 
 app.listen(4000, error => {
   error ? console.log(error) : console.log('Back-End 🚀');

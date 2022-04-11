@@ -38,7 +38,19 @@ app.get('/ask/:id', (req, res) => {
     raw: true,
     where: {id}
   }).then(ask => {
-    ask ? res.render('currentAsk', { ask }) : res.redirect('/');
+    if(ask) {
+      Response.findAll({ 
+        raw: true, 
+        where: {askId: ask.id}, 
+        order: [
+          ['id', 'DESC']
+        ]
+      }).then(responses => {
+        res.render('currentAsk', { ask, responses });
+      })
+    } else {
+      res.redirect('/');
+    }
   });
 })
 

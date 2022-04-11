@@ -8,7 +8,7 @@
       <p><%= ask.description %></p>
       <hr />
       <form method="post" action="/response"
-        class="row ms-3 me-3">
+        class="row ms-3 me-3 mb-3">
         <textarea 
           class="form-control" 
           placeholder="Digite sua resposta" 
@@ -17,6 +17,16 @@
 
         <button type="submit" class="btn btn-primary mt-3">Responder</button>
       </form>
+
+      <hr />
+      <h3>Respostas</h3>
+      <% responses.forEach(response => { %>
+        <div class="card mt-3 mb-4">
+          <div class="card-body">
+            <p><%= response.body %></p>
+          </div>
+        </div>
+      <% }) %>
     </div>
   </body>
   <%- include('partials/scripts.ejs') %>
